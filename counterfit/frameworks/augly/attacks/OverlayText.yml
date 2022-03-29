@@ -1,0 +1,35 @@
+attack_category: common-corruption
+attack_class: augly.image.transforms.OverlayText
+attack_data_tags:
+- image
+attack_docs: "\n        Overlay text onto the image (by default, text is randomly\
+  \ overlaid)\n\n        @param image: PIL Image to be augmented\n\n        @param\
+  \ metadata: if set to be a list, metadata about the function execution\n       \
+  \     including its name, the source & dest width, height, etc. will be appended\
+  \ to\n            the inputted list. If set to None, no metadata will be appended\
+  \ or returned\n\n        @param bboxes: a list of bounding boxes can be passed in\
+  \ here if desired. If\n            provided, this list will be modified in place\
+  \ such that each bounding box is\n            transformed according to this function\n\
+  \n        @param bbox_format: signifies what bounding box format was used in `bboxes`.\
+  \ Must\n            specify `bbox_format` if `bboxes` is provided. Supported bbox_format\
+  \ values\n            are \"pascal_voc\", \"pascal_voc_norm\", \"coco\", and \"\
+  yolo\"\n\n        @returns: Augmented PIL Image\n        "
+attack_name: OverlayText
+attack_parameters:
+  color:
+  - 255
+  - 0
+  - 0
+  font_file: C:\Users\willpearce\Desktop\projects\counterfit\cf-dev\lib\site-packages\augly\assets\fonts\NotoNaskhArabic-Regular.ttf
+  font_size: 0.15
+  opacity: 1.0
+  p: 1.0
+  text:
+  - 115
+  - 864
+  - 470
+  - 135
+  - 673
+  x_pos: 0.0
+  y_pos: 0.5
+attack_type: blackbox

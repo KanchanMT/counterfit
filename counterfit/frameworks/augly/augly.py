@@ -2,13 +2,11 @@ from PIL import Image
 import tqdm
 import numpy as np
 
-from counterfit.core.config import Config
-
 # Used for typing function arguments
-from counterfit.core.frameworks import Framework
+from counterfit.core.frameworks import CFFramework
 from counterfit.core.attacks import CFAttack
-from counterfit.core.targets import Target
-from counterfit.report.report_generator import get_target_data_type_obj
+from counterfit.core.targets import CFTarget
+from counterfit.core.reporting import get_target_data_type_obj
 
 
 def cross_entropy(predictions, targets):
@@ -17,7 +15,7 @@ def cross_entropy(predictions, targets):
     return ce
 
 
-class AuglyAttack(object):
+class AuglyAttack:
     def __init__(self, classifier, attack_class, query_budget=5):
         self.classifier = classifier
         self.attack_class = attack_class
@@ -68,16 +66,16 @@ class AuglyAttack(object):
         np.argmax(self.results)
 
 
-class AuglyFramework(Framework):
+class AuglyFramework(CFAttack):
     def __init__(self):
         super().__init__()
 
     def load(self):
-        config_path = f"{Config.frameworks_path}/augly/config.json"
+        config_path = f"frameworks/augly/config.json"
         self.load_from_config(config_path)
         self.loaded_status = True
 
-    def build(self, target: Target, attack: object):
+    def build(self, target: CFTarget, attack: object):
         new_attack = AuglyAttack(
             target, attack())
 

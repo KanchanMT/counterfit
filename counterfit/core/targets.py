@@ -4,7 +4,7 @@ import os
 import pathlib
 from typing import Union
 
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from collections import defaultdict
 
 import numpy as np
@@ -12,16 +12,18 @@ from counterfit.core.output import CFPrint
 from counterfit.core.attacks import CFAttack
 from counterfit.core.utils import set_id
 
-class Target(ABC):
+class CFTarget:
     """Base class for all targets.
     """
 
-    def __init__(self):
-        self.target_id = set_id()
-        self.loaded_status = False
-        self.active_attack = None
+    def __init__(self, **kwargs):
+        self.id = set_id()
         self.logger = None
         self.attacks = defaultdict()
+        self.active_attack = None
+
+        for k, v in kwargs.items():
+            setattr(self, k, v)
 
     @abstractmethod
     def load(self):
@@ -49,7 +51,7 @@ class Target(ABC):
         """
         self.loaded_status = status
 
-    def add_attack(self, attack: CFAttack) -> None:
+    def add_attack(self, attack) -> None:
         """Add a CFAttack to the target.
 
         Args:
@@ -57,25 +59,21 @@ class Target(ABC):
         """
         self.attacks[attack.attack_id] = attack
 
-    def set_active_attack(self, attack_id: str) -> None:
+    def set_active_attack(self, attack) -> None:
         """Sets the active attack
 
         Args:
             attack_id (str): The attack_id of the attack to use. 
         """
-        active_attack = self.attacks.get(attack_id, None)
-        if not active_attack:
-            CFPrint.failed(f"{attack_id} not found")
-        else:
-            CFPrint.success(f"Using {attack_id}")
-            self.active_attack = active_attack
+        CFPrint.success(f"Using {attack.attack_id}")
+        self.active_attack = attack
 
     def get_active_attack(self) -> None:
         """Get the active attack
         """
         if self.active_attack is None:
             return None
-        return self.active_attack.attack_id
+        return self.active_attack
 
     def get_attacks(self, scan_id: str = None) -> dict:
         """Get all of the attacks
@@ -115,7 +113,7 @@ class Target(ABC):
             else:
                 # multiple index (numpy)
                 out = np.array([self.X[i] for i in sample_index])
-                batch_shape = (-1,) + self.target_input_shape
+                batch_shape = (-1,) + self.input_shape
         elif type(self.X[sample_index]) is str:
             # single index (string)
             # array of strings (textattack)
@@ -125,7 +123,7 @@ class Target(ABC):
             # single index (array)
             # array of arrays (art)
             out = np.atleast_2d(self.X[sample_index])
-            batch_shape = (-1,) + self.target_input_shape
+            batch_shape = (-1,) + self.input_shape
 
         return out.reshape(batch_shape)
 
@@ -185,4 +183,7 @@ class Target(ABC):
             [type]: [description]
         """
         output = np.atleast_2d(output)
-        return [self.target_output_classes[i] for i in np.argmax(output, axis=1)]
+        return [self.output_classes[i] for i in np.argmax(output, axis=1)]
+
+    def get_results_folder(self, folder="results"):
+        return os.path.join(os.curdir, folder)
