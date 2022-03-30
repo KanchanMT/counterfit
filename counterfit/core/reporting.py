@@ -7,7 +7,7 @@ import numpy as np
 from PIL import Image
 from rich.table import Table
 import Levenshtein
-import cv2
+
 
 from counterfit.core.utils import transform_numpy_to_bytes, get_predict_folder
 from counterfit.core.output import CFPrint
@@ -265,31 +265,31 @@ class ImageReportGenerator(TargetReportGenerator):
         return filename
     
     @staticmethod
-    def draw_prediction(img_array, class_id, confidence, x, y, x_plus_w, y_plus_h, classes, color):
+    # def draw_prediction(img_array, class_id, confidence, x, y, x_plus_w, y_plus_h, classes, color):
 
-        label = str(classes[class_id]+':'+ str(round(confidence, 3)))
-        cv2.rectangle(img_array, (x, y), (x_plus_w, y_plus_h), color, 2)
-        cv2.putText(img_array, label, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
+    #     label = str(classes[class_id]+':'+ str(round(confidence, 3)))
+    #     cv2.rectangle(img_array, (x, y), (x_plus_w, y_plus_h), color, 2)
+    #     cv2.putText(img_array, label, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
 
     @staticmethod
-    def save_image_w_bbs(img_arr, indices, confidences, class_ids, boxes, classes, filename):
+    # def save_image_w_bbs(img_arr, indices, confidences, class_ids, boxes, classes, filename):
         
-        colors = np.random.uniform(0, 255, size=(len(classes), 3))
-        img_arr = img_arr[..., ::-1] # cv2 reads image in BGR order so swapping into RGB
-        img_arr = img_arr.astype(np.uint8)
-        for i in indices:
-            box = boxes[i]
-            x = round(box[0])
-            y = round(box[1])
-            w = box[2]
-            h = box[3]
-            class_id = class_ids[i]
-            confidence = confidences[i]
-            x_plus_w = round(x+w)
-            y_plus_h = round(y+h)
-            color = colors[class_id] # [R, G, B] numpy array
-            ImageReportGenerator.draw_prediction(img_arr, class_id, confidence, x, y, x_plus_w, y_plus_h, classes, color)
-        cv2.imwrite(filename, img_arr)
+    #     colors = np.random.uniform(0, 255, size=(len(classes), 3))
+    #     img_arr = img_arr[..., ::-1] # cv2 reads image in BGR order so swapping into RGB
+    #     img_arr = img_arr.astype(np.uint8)
+    #     for i in indices:
+    #         box = boxes[i]
+    #         x = round(box[0])
+    #         y = round(box[1])
+    #         w = box[2]
+    #         h = box[3]
+    #         class_id = class_ids[i]
+    #         confidence = confidences[i]
+    #         x_plus_w = round(x+w)
+    #         y_plus_h = round(y+h)
+    #         color = colors[class_id] # [R, G, B] numpy array
+    #         ImageReportGenerator.draw_prediction(img_arr, class_id, confidence, x, y, x_plus_w, y_plus_h, classes, color)
+    #     cv2.imwrite(filename, img_arr)
 
     @staticmethod
     def get_run_summary(cfattack):

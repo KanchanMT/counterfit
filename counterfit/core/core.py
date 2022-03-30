@@ -1,6 +1,5 @@
 import glob
 import os
-from cv2 import trace
 import yaml
 import time
 import importlib
