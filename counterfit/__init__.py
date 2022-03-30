@@ -14,5 +14,5 @@ from . import (
     frameworks
 )
 
-
+__version__ = "1.1.0"
 name = "counterfit"
