@@ -19,6 +19,3 @@ pytest==6.2.5
 
 # targets
 onnxruntime==1.10.0
-tensorflow
-keras
-
