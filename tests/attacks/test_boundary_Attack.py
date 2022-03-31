@@ -10,7 +10,6 @@ from targets import Digits
 from targets import DigitKeras
 from targets import MovieReviewsTarget
 from targets import SatelliteImages
-from targets import YoloV3Target
 
 from counterfit import Counterfit
 

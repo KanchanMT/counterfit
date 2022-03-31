@@ -120,4 +120,4 @@ docs/build/doctrees
 build
 
 # dev env
-cf-dev
+cf-venv

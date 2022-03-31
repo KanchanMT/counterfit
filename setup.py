@@ -43,6 +43,9 @@ setuptools.setup(
         "Programming Language :: Python :: 3.7+",
         "Operating System :: OS Independent",
     ],
+    package_data={
+        "": ["*.yml"]
+    },
     packages=setuptools.find_namespace_packages(
         exclude=[
             "build",
