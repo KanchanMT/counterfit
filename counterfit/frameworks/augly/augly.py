@@ -1,6 +1,9 @@
 from PIL import Image
 import tqdm
 import numpy as np
+import yaml 
+import pathlib
+import glob
 
 # Used for typing function arguments
 from counterfit.core.frameworks import CFFramework
@@ -66,14 +69,22 @@ class AuglyAttack:
         np.argmax(self.results)
 
 
-class AuglyFramework(CFAttack):
+class AuglyFramework(CFFramework):
     def __init__(self):
         super().__init__()
 
-    def load(self):
-        config_path = f"frameworks/augly/config.json"
-        self.load_from_config(config_path)
-        self.loaded_status = True
+    @classmethod
+    def get_attacks(cls, framework_path=f"{pathlib.Path(__file__).parent.resolve()}/attacks"):
+        attacks = {}
+        files = glob.glob(f"{framework_path}/*.yml")
+
+        for attack in files:
+            with open(attack, 'r') as f:
+                data = yaml.safe_load(f)
+        
+            attacks[data['attack_name']] = data
+
+        return attacks
 
     def build(self, target: CFTarget, attack: object):
         new_attack = AuglyAttack(
