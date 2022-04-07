@@ -21,7 +21,7 @@ class CFAttack:
         
         # Parent framework
         self.name = name
-        self.attack_id = utils.set_id(),
+        self.attack_id = utils.set_id()
         self.scan_id = scan_id
         self.target = target
         self.framework = framework
@@ -86,7 +86,7 @@ class CFAttack:
         scan_folder = os.path.join(results_folder, self.attack_id)
         if not os.path.exists(scan_folder):
             os.mkdir(scan_folder)
-
+        
         return scan_folder
 
     def save_run_summary(self, filename=None, verbose=False):
