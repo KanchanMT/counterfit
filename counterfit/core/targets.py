@@ -5,11 +5,10 @@ import pathlib
 from typing import Union
 
 from abc import abstractmethod
-from collections import defaultdict
+
 
 import numpy as np
 from counterfit.core.output import CFPrint
-from counterfit.core.attacks import CFAttack
 from counterfit.core.utils import set_id
 
 class CFTarget:
@@ -17,10 +16,7 @@ class CFTarget:
     """
 
     def __init__(self, **kwargs):
-        self.id = set_id()
-        self.logger = None
-        self.attacks = defaultdict()
-        self.active_attack = None
+        self.target_id = set_id()
 
         for k, v in kwargs.items():
             setattr(self, k, v)
@@ -35,64 +31,13 @@ class CFTarget:
         raise NotImplementedError
     
     @abstractmethod
-    def predict(self, x):
+    def predict(self, x: np.ndarray) -> np.ndarray:
         """The predict interface to the target model.
 
         Raises:
             NotImplementedError: Is required to be implemented by a framework.
         """
         raise NotImplementedError
-
-    def set_loaded_status(self, status: bool = False) -> None:
-        """Set the loaded status of a framework
-
-        Args:
-            status (bool, optional): [description]. Defaults to False.
-        """
-        self.loaded_status = status
-
-    def add_attack(self, attack) -> None:
-        """Add a CFAttack to the target.
-
-        Args:
-            attack (CFAttack): The CFAttack object
-        """
-        self.attacks[attack.attack_id] = attack
-
-    def set_active_attack(self, attack) -> None:
-        """Sets the active attack
-
-        Args:
-            attack_id (str): The attack_id of the attack to use. 
-        """
-        CFPrint.success(f"Using {attack.attack_id}")
-        self.active_attack = attack
-
-    def get_active_attack(self) -> None:
-        """Get the active attack
-        """
-        if self.active_attack is None:
-            return None
-        return self.active_attack
-
-    def get_attacks(self, scan_id: str = None) -> dict:
-        """Get all of the attacks
-
-        Args:
-            scan_id (str, optional): The scan_id to filter on. Defaults to None.
-
-        Returns:
-            dict: [description]
-        """
-        if scan_id:
-            scans_by_scan_id = {}
-            for attack_id, attack in self.attacks.items():
-                if attack.scan_id == scan_id:
-                    scans_by_scan_id[attack_id] = attack
-            return scans_by_scan_id
-        else:
-            return self.attacks
-
 
     def get_samples(self, sample_index: Union[int, list, range] = 0) -> np.ndarray:
         """This function helps to directly set sample_index and samples for a target not depending on attack.
@@ -187,3 +132,16 @@ class CFTarget:
 
     def get_results_folder(self, folder="results"):
         return os.path.join(os.curdir, folder)
+
+    def get_data_type_obj(self):
+        target_data_types = {
+            'text': "TextReportGenerator",
+            'image': "ImageReportGenerator",
+            'tabular': "TabularReportGenerator"
+        }
+        
+        if self.data_type not in target_data_types.keys():
+            CFPrint.failed(f"{self.data_type} not supported. Choose one of {list(target_data_types.keys())}")
+            return 
+
+        return target_data_types[self.data_type]
