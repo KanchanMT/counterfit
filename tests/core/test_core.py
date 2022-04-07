@@ -17,7 +17,6 @@ def test_frameworks():
 
 def test_build_target():
     target = Counterfit.build_target(
-        name="test_target",
         data_type="images",
         endpoint="http://locahost/score",
         output_classes=["Cat", "NotACat"],
@@ -33,8 +32,7 @@ def test_build_target():
 
 def test_build_attack():
     target = Counterfit.build_target(
-        name="test_target",
-        data_type="images",
+        data_type="image",
         endpoint="http://locahost/score",
         output_classes=["Cat", "NotACat"],
         classifier="blackbox",
