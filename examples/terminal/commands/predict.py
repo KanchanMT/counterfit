@@ -7,8 +7,8 @@ from rich.table import Table
 
 from counterfit.core.output import CFPrint
 from core.state import CFState
-from counterfit.core.reporting import get_target_data_type_obj
-from counterfit.core.reporting import printable_numpy
+# from counterfit.reporting import get_target_data_type_obj
+from counterfit.reporting import printable_numpy
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", "--index", type=str, default=None,
@@ -81,7 +81,7 @@ def do_predict(self, args: argparse.Namespace) -> None:
     result = target.predict(samples)  # results is list of probability scores
     labels = target.outputs_to_labels(result)
     target_datatype = target.target_data_type
-    target_data_type_obj = get_target_data_type_obj(target_datatype)
+    #target_data_type_obj = get_target_data_type_obj(target_datatype)
     samples = target_data_type_obj.printable(target, samples, prefix)
     results = printable_numpy(result)
     if not hasattr(sample_index, "__iter__"):

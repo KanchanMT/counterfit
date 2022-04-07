@@ -4,7 +4,7 @@ from pydoc import locate
 from cmd2 import with_argparser
 from cmd2 import with_category
 
-from counterfit.core.reporting import get_data_type_obj_map
+from counterfit.reporting import get_data_type_obj_map
 from counterfit.core.output import CFPrint
 
 from core.state import CFState

@@ -113,6 +113,39 @@ class CFState:
             self.active_target.attacks = attacks
             self.active_target.active_attack = active_attack
 
+    def set_active_attack(self, attack) -> None:
+        """Sets the active attack
+
+        Args:
+            attack_id (str): The attack_id of the attack to use. 
+        """
+        CFPrint.success(f"Using {attack.attack_id}")
+        self.active_attack = attack
+
+    def get_active_attack(self) -> None:
+        """Get the active attack
+        """
+        if self.active_attack is None:
+            return None
+        return self.active_attack
+
+    def get_attacks(self, scan_id: str = None) -> dict:
+        """Get all of the attacks
+
+        Args:
+            scan_id (str, optional): The scan_id to filter on. Defaults to None.
+
+        Returns:
+            dict: [description]
+        """
+        if scan_id:
+            scans_by_scan_id = {}
+            for attack_id, attack in self.attacks.items():
+                if attack.scan_id == scan_id:
+                    scans_by_scan_id[attack_id] = attack
+            return scans_by_scan_id
+        else:
+            return self.attacks
 
     def get_active_target(self) -> Target:
         """Get the active target
@@ -131,6 +164,8 @@ class CFState:
         """
         target = self.targets.get(target_name)
         target.add_attack(cfattack)
+
+        #self.attacks[attack.attack_id] = attack
 
     def set_active_target(self, target: CFTarget) -> None:
         """Set the active target with the target name provided.
