@@ -16,10 +16,19 @@ attack_docs: "\n        Pads the image\n\n        @param image: PIL Image to be 
 attack_name: Pad
 attack_parameters:
   color:
-  - 0
-  - 0
-  - 0
-  h_factor: 0.25
-  p: 1.0
-  w_factor: 0.25
+    default: 0.25
+    docs: Refer to attack file
+    optimize: {}
+  h_factor:
+    default: 0.25
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  w_factor:
+    default: 0.25
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

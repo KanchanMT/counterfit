@@ -16,14 +16,32 @@ attack_docs: "\n        Overlay stripe pattern onto the image (by default, strip
   yolo\"\n\n        @returns: Augmented PIL Image\n        "
 attack_name: OverlayStripes
 attack_parameters:
-  line_angle: 0
+  line_angle:
+    default: 0
+    docs: Refer to attack file
+    optimize: {}
   line_color:
-  - 255
-  - 255
-  - 255
-  line_density: 0.5
-  line_opacity: 1.0
-  line_type: solid
-  line_width: 0.5
-  p: 1.0
+    default: 0.5
+    docs: Refer to attack file
+    optimize: {}
+  line_density:
+    default: 0.5
+    docs: Refer to attack file
+    optimize: {}
+  line_opacity:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  line_type:
+    default: 0.5
+    docs: Refer to attack file
+    optimize: {}
+  line_width:
+    default: 0.5
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

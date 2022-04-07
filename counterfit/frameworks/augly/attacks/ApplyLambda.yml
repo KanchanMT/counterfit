@@ -1,8 +1,8 @@
 attack_category: common-corruption
-attack_class: augly.image.transforms.OverlayEmoji
+attack_class: augly.image.transforms.ApplyLambda
 attack_data_tags:
 - image
-attack_docs: "\n        Overlay an emoji onto the original image\n\n        @param\
+attack_docs: "\n        Apply a user-defined lambda on an image\n\n        @param\
   \ image: PIL Image to be augmented\n\n        @param metadata: if set to be a list,\
   \ metadata about the function execution\n            including its name, the source\
   \ & dest width, height, etc. will be appended to\n            the inputted list.\
@@ -14,30 +14,10 @@ attack_docs: "\n        Overlay an emoji onto the original image\n\n        @par
   \ if `bboxes` is provided. Supported bbox_format values\n            are \"pascal_voc\"\
   , \"pascal_voc_norm\", \"coco\", and \"yolo\"\n\n        @returns: Augmented PIL\
   \ Image\n        "
-attack_name: OverlayEmoji
+attack_name: ApplyLambda
 attack_parameters:
-  emoji_path:
-    default: smiling_face_with_heart_eyes.png
-    docs: Refer to attack file
-    optimize: {}
-  emoji_size:
-    default: 0.15
-    docs: Refer to attack file
-    optimize: {}
-  opacity:
-    default: 1.0
-    docs: Refer to attack file
-    optimize: {}
   p:
     default: 1.0
-    docs: Refer to attack file
-    optimize: {}
-  x_pos:
-    default: 0.4
-    docs: Refer to attack file
-    optimize: {}
-  y_pos:
-    default: 0.8
     docs: Refer to attack file
     optimize: {}
 attack_type: blackbox

@@ -16,7 +16,16 @@ attack_docs: "\n        Alters the resolution of an image\n\n        @param imag
   \ Image\n        "
 attack_name: Scale
 attack_parameters:
-  factor: 0.5
-  interpolation: null
-  p: 1.0
+  factor:
+    default: 0.5
+    docs: Refer to attack file
+    optimize: {}
+  interpolation:
+    default: null
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

@@ -16,6 +16,12 @@ attack_docs: "\n        Alters the aspect ratio of the image\n\n        @param i
   \ Image\n        "
 attack_name: ChangeAspectRatio
 attack_parameters:
-  p: 1.0
-  ratio: 1.0
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  ratio:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

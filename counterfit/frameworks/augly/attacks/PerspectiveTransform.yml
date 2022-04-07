@@ -18,9 +18,24 @@ attack_docs: "\n        Apply a perspective transform to the image so it looks l
   \ Image\n        "
 attack_name: PerspectiveTransform
 attack_parameters:
-  dx: 0.0
-  dy: 0.0
-  p: 1.0
-  seed: 42
-  sigma: 50.0
+  dx:
+    default: 0.0
+    docs: Refer to attack file
+    optimize: {}
+  dy:
+    default: 0.0
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  seed:
+    default: 42
+    docs: Refer to attack file
+    optimize: {}
+  sigma:
+    default: 50.0
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

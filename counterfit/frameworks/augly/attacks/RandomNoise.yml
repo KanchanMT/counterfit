@@ -16,8 +16,20 @@ attack_docs: "\n        Adds random noise to the image\n\n        @param image: 
   \ Image\n        "
 attack_name: RandomNoise
 attack_parameters:
-  mean: 0.0
-  p: 1.0
-  seed: 42
-  var: 0.01
+  mean:
+    default: 0.0
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  seed:
+    default: 42
+    docs: Refer to attack file
+    optimize: {}
+  var:
+    default: 0.01
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

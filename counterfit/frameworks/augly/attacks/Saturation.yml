@@ -16,6 +16,12 @@ attack_docs: "\n        Alters the saturation of an image\n\n        @param imag
   \ Image\n        "
 attack_name: Saturation
 attack_parameters:
-  factor: 1.0
-  p: 1.0
+  factor:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

@@ -16,6 +16,12 @@ attack_docs: "\n        Alters the opacity of an image\n\n        @param image: 
   \ Image\n        "
 attack_name: Opacity
 attack_parameters:
-  level: 1.0
-  p: 1.0
+  level:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

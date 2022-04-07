@@ -16,10 +16,28 @@ attack_docs: "\n        Overlay the image onto a screenshot template so it looks
   , \"coco\", and \"yolo\"\n\n        @returns: Augmented PIL Image\n        "
 attack_name: OverlayOntoScreenshot
 attack_parameters:
-  crop_src_to_fit: false
-  max_image_size_pixels: null
-  p: 1.0
-  resize_src_to_match_template: true
-  template_bboxes_filepath: C:\Users\willpearce\Desktop\projects\counterfit\cf-dev\lib\site-packages\augly\assets\screenshot_templates\bboxes.json
-  template_filepath: C:\Users\willpearce\Desktop\projects\counterfit\cf-dev\lib\site-packages\augly\assets\screenshot_templates\web.png
+  crop_src_to_fit:
+    default: false
+    docs: Refer to attack file
+    optimize: {}
+  max_image_size_pixels:
+    default: null
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  resize_src_to_match_template:
+    default: true
+    docs: Refer to attack file
+    optimize: {}
+  template_bboxes_filepath:
+    default: bboxes.json
+    docs: Refer to attack file
+    optimize: {}
+  template_filepath:
+    default: web.png
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

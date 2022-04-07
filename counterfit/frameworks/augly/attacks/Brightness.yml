@@ -16,6 +16,12 @@ attack_docs: "\n        Alters the brightness of the image\n\n        @param ima
   \ Image\n        "
 attack_name: Brightness
 attack_parameters:
-  factor: 1.0
-  p: 1.0
+  factor:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

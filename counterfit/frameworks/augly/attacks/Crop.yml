@@ -15,9 +15,24 @@ attack_docs: "\n        Crops the image\n\n        @param image: PIL Image to be
   yolo\"\n\n        @returns: Augmented PIL Image\n        "
 attack_name: Crop
 attack_parameters:
-  p: 1.0
-  x1: 0.25
-  x2: 0.75
-  y1: 0.25
-  y2: 0.75
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  x1:
+    default: 0.25
+    docs: Refer to attack file
+    optimize: {}
+  x2:
+    default: 0.75
+    docs: Refer to attack file
+    optimize: {}
+  y1:
+    default: 0.25
+    docs: Refer to attack file
+    optimize: {}
+  y2:
+    default: 0.75
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

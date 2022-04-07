@@ -15,8 +15,16 @@ attack_docs: "\n        Resizes an image\n\n        @param image: PIL Image to b
   , \"coco\", and \"yolo\"\n\n        @returns: Augmented PIL Image\n        "
 attack_name: Resize
 attack_parameters:
-  height: null
-  p: 1.0
-  resample: 2
-  width: null
+  height:
+    default: null
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  width:
+    default: null
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

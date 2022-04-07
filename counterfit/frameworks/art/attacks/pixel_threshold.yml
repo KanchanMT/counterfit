@@ -1,6 +1,7 @@
 attack_category: evasion
 attack_class: art.attacks.evasion.pixel_threshold.PixelAttack
-attack_data_tags: []
+attack_data_tags:
+- image
 attack_docs: "\n    This attack was originally implemented by Vargas et al. (2019).\
   \ It is generalisation of One Pixel Attack originally\n    implemented by Su et\
   \ al. (2019).\n\n    | One Pixel Attack Paper link: https://arxiv.org/abs/1710.08864\n\
@@ -38,7 +39,7 @@ attack_parameters:
         max: 200
         min: 1
   targeted:
-    default: null
+    default: false
     docs: Indicates whether the attack is targeted (True) or untargeted (False).
     optimize: {}
   th:

@@ -17,8 +17,11 @@ attack_docs: "\n        Pads the shorter edge of the image such that it is now s
 attack_name: PadSquare
 attack_parameters:
   color:
-  - 0
-  - 0
-  - 0
-  p: 1.0
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

@@ -15,5 +15,8 @@ attack_docs: "\n        Horizontally flips an image\n\n        @param image: PIL
   , \"coco\", and \"yolo\"\n\n        @returns: Augmented PIL Image\n        "
 attack_name: HFlip
 attack_parameters:
-  p: 1.0
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

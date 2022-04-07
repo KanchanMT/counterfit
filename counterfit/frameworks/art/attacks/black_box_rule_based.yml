@@ -16,4 +16,4 @@ attack_parameters:
       uniform:
       - 0.0
       - 1.0
-attack_type: unknown
+attack_type: closed-box

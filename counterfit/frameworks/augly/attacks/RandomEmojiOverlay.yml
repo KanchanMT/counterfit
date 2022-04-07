@@ -16,10 +16,28 @@ attack_docs: "\n        Transform that overlays a random emoji onto an image\n\n
   \ @returns: Augmented PIL Image\n        "
 attack_name: RandomEmojiOverlay
 attack_parameters:
-  emoji_directory: C:\Users\willpearce\Desktop\projects\counterfit\cf-dev\lib\site-packages\augly\assets\twemojis\smileys
-  emoji_size: 0.15
-  opacity: 1.0
-  p: 1.0
-  x_pos: 0.4
-  y_pos: 0.4
+  emoji_directory:
+    default: smileys
+    docs: Refer to attack file
+    optimize: {}
+  emoji_size:
+    default: 0.15
+    docs: Refer to attack file
+    optimize: {}
+  opacity:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  x_pos:
+    default: 0.4
+    docs: Refer to attack file
+    optimize: {}
+  y_pos:
+    default: 0.4
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

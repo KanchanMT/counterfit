@@ -16,6 +16,12 @@ attack_docs: "\n        Alters an image to be grayscale\n\n        @param image:
   \ Image\n        "
 attack_name: Grayscale
 attack_parameters:
-  mode: luminosity
-  p: 1.0
+  mode:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

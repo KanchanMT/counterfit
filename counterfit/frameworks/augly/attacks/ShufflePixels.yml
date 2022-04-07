@@ -19,7 +19,16 @@ attack_docs: "\n        Shuffles the pixels of an image with respect to the shuf
   yolo\"\n\n        @returns: Augmented PIL Image\n        "
 attack_name: ShufflePixels
 attack_parameters:
-  factor: 1.0
-  p: 1.0
-  seed: 10
+  factor:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  seed:
+    default: 10
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

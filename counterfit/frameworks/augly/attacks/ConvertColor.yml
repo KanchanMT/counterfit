@@ -16,10 +16,28 @@ attack_docs: "\n        Converts the image in terms of color modes\n\n        @p
   \ Image\n        "
 attack_name: ConvertColor
 attack_parameters:
-  colors: 256
-  dither: null
-  matrix: null
-  mode: null
-  p: 1.0
-  palette: 0
+  colors:
+    default: 256
+    docs: Refer to attack file
+    optimize: {}
+  dither:
+    default: null
+    docs: Refer to attack file
+    optimize: {}
+  matrix:
+    default: null
+    docs: Refer to attack file
+    optimize: {}
+  mode:
+    default: null
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  palette:
+    default: 0
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

@@ -16,17 +16,32 @@ attack_docs: "\n        Creates a new image that looks like a meme, given text a
   yolo\"\n\n        @returns: Augmented PIL Image\n        "
 attack_name: MemeFormat
 attack_parameters:
-  caption_height: 250
-  font_file: C:\Users\willpearce\Desktop\projects\counterfit\cf-dev\lib\site-packages\augly\assets\fonts\Raleway-ExtraBold.ttf
+  caption_height:
+    default: 250
+    docs: Refer to attack file
+    optimize: {}
+  font_file:
+    default: Raleway-ExtraBold.ttf
+    docs: Refer to attack file
+    optimize: {}
   meme_bg_color:
-  - 255
-  - 255
-  - 255
-  opacity: 1.0
-  p: 1.0
-  text: LOL
+    default: 250
+    docs: Refer to attack file
+    optimize: {}
+  opacity:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  text:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
   text_color:
-  - 0
-  - 0
-  - 0
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

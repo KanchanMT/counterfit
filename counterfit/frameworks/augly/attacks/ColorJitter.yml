@@ -15,8 +15,20 @@ attack_docs: "\n        Color jitters the image\n\n        @param image: PIL Ima
   , \"coco\", and \"yolo\"\n\n        @returns: Augmented PIL Image\n        "
 attack_name: ColorJitter
 attack_parameters:
-  brightness_factor: 1.0
-  contrast_factor: 1.0
-  p: 1.0
-  saturation_factor: 1.0
+  brightness_factor:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  contrast_factor:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  saturation_factor:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

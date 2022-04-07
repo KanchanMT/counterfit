@@ -15,6 +15,12 @@ attack_docs: "\n        Rotates the image\n\n        @param image: PIL Image to 
   , \"coco\", and \"yolo\"\n\n        @returns: Augmented PIL Image\n        "
 attack_name: Rotate
 attack_parameters:
-  degrees: 15.0
-  p: 1.0
+  degrees:
+    default: 15.0
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

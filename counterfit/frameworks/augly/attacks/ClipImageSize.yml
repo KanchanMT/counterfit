@@ -16,7 +16,16 @@ attack_docs: "\n        Scales the image up or down if necessary to fit in the g
   yolo\"\n\n        @returns: Augmented PIL Image\n        "
 attack_name: ClipImageSize
 attack_parameters:
-  max_resolution: null
-  min_resolution: null
-  p: 1.0
+  max_resolution:
+    default: null
+    docs: Refer to attack file
+    optimize: {}
+  min_resolution:
+    default: null
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

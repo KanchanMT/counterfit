@@ -16,6 +16,12 @@ attack_docs: "\n        Alters the contrast of the image\n\n        @param image
   \ Image\n        "
 attack_name: Contrast
 attack_parameters:
-  factor: 1.0
-  p: 1.0
+  factor:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox

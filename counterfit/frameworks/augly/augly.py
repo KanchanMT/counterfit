@@ -4,23 +4,23 @@ import numpy as np
 import yaml 
 import pathlib
 import glob
+import pydoc
 
 # Used for typing function arguments
 from counterfit.core.frameworks import CFFramework
 from counterfit.core.attacks import CFAttack
 from counterfit.core.targets import CFTarget
-from counterfit.core.reporting import get_target_data_type_obj
 
 
 def cross_entropy(predictions, targets):
-    N = predictions.shape[0]
+    N = np.array(predictions).shape[0]
     ce = -np.sum(targets * np.log(predictions)) / N
     return ce
 
 
 class AuglyAttack:
     def __init__(self, classifier, attack_class, query_budget=5):
-        self.classifier = classifier
+        self.predict = classifier
         self.attack_class = attack_class
         self.results = []
         self.query_budget = query_budget
@@ -30,9 +30,9 @@ class AuglyAttack:
         results = []
         all_scores = []
         for sample in x:
-            sample = np.squeeze(sample)
+            # sample = np.squeeze(sample)
             # get the original output
-            orig_pred = self.classifier.predict(sample)
+            orig_pred = self.predict(sample)
             best_score = 0
             best_sample = None
             for _ in tqdm.tqdm(range(query_budget)):
@@ -49,7 +49,8 @@ class AuglyAttack:
                     raise Exception(
                         "Expecting X to be numpy array of np.uint8 [0,255] or np.float32 [0,1]")
 
-                new_pred = self.classifier.predict(aug)
+                
+                new_pred = self.predict(aug)
                 self.results.append(new_pred)
 
                 # score the sample using  log loss (maximize loss)
@@ -64,9 +65,6 @@ class AuglyAttack:
 
         # return the "best" augmentation as the adversarial example
         return np.array(results, dtype=x.dtype), np.array(all_scores).reshape((x.shape[0], query_budget)).mean(axis=-1)
-
-    def check_succes(self):
-        np.argmax(self.results)
 
 
 class AuglyFramework(CFFramework):
@@ -86,9 +84,12 @@ class AuglyFramework(CFFramework):
 
         return attacks
 
-    def build(self, target: CFTarget, attack: object):
+    def build(self, target: CFTarget, attack: str):
+        attack = pydoc.locate(attack)
+        loaded_attack = attack()
+
         new_attack = AuglyAttack(
-            target, attack())
+            target.predict_wrapper, loaded_attack)
 
         return new_attack
 
@@ -97,22 +98,24 @@ class AuglyFramework(CFFramework):
         return results
     
     def post_attack_processing(self, cfattack: CFAttack):
-        current_datatype = cfattack.target.target_data_type
-        current_dt_report_gen = get_target_data_type_obj(current_datatype)
-        summary = current_dt_report_gen.get_run_summary(cfattack)
-        current_dt_report_gen.print_run_summary(summary)
+        pass
+        current_datatype = cfattack.target.data_type
+        # current_dt_report_gen = get_data_type_obj(current_datatype)
+        # summary = current_dt_report_gen.get_run_summary(cfattack)
+        # current_dt_report_gen.print_run_summary(summary)
 
     def fix_grayscale(x):
         return np.squeeze(x, axis=2)
 
     def check_success(self, cfattack: CFAttack) -> bool:
-        final_outputs, final_labels = cfattack.target.get_sample_labels(
-            cfattack.results)
-        cfattack.final_labels = final_labels
-        cfattack.final_outputs = final_outputs
-        cfattack.initial_labels = final_labels
+        return True
+        # final_outputs, final_labels = cfattack.target.get_sample_labels(
+        #     cfattack.results)
+        # cfattack.final_labels = final_labels
+        # cfattack.final_outputs = final_outputs
+        # cfattack.initial_labels = final_labels
 
-        # successful        
-        success = cfattack.final_labels != np.array(cfattack.initial_labels) 
-        return success
+        # # successful        
+        # success = cfattack.final_labels != np.array(cfattack.initial_labels) 
+        # return success
     

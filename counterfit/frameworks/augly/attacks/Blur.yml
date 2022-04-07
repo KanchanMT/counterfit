@@ -15,6 +15,12 @@ attack_docs: "\n        Blurs the image\n\n        @param image: PIL Image to be
   yolo\"\n\n        @returns: Augmented PIL Image\n        "
 attack_name: Blur
 attack_parameters:
-  p: 1.0
-  radius: 2.0
+  p:
+    default: 1.0
+    docs: Refer to attack file
+    optimize: {}
+  radius:
+    default: 2.0
+    docs: Refer to attack file
+    optimize: {}
 attack_type: blackbox
