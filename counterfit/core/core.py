@@ -44,7 +44,6 @@ class Counterfit:
     @classmethod
     def build_target(
         cls, 
-        name: str, 
         data_type: str, 
         endpoint: str, 
         output_classes: list,
@@ -56,7 +55,6 @@ class Counterfit:
 
         try:
             target = CFTarget(
-                name=name, 
                 data_type=data_type, 
                 endpoint=endpoint,
                 output_classes=output_classes, 
@@ -76,7 +74,7 @@ class Counterfit:
         except Exception as error:
             CFPrint.failed(f"Failed to load target: {error}")
         
-        CFPrint.success(f"Successfully created {target.name}")
+        CFPrint.success(f"Successfully created target")
         return target
 
     @classmethod
@@ -109,11 +107,21 @@ class Counterfit:
             CFPrint.failed(f"Failed to load framework or resolve {attack}: {error}")
             traceback.print_exc()
 
+        # Ensure the attack is compatible with the target
+        if target.data_type not in attack["attack_data_tags"]:
+            CFPrint.failed(f"Target data type ({target.data_type}) is not compatible with the attack chosen ({attack['attack_data_tags']})")
+            return False
+
+        if hasattr(target, "classifier"):
+            CFPrint.warn("Target classifier may not be compatible with this attack.")
+        else:
+            CFPrint.warn("Target does not have classifier attribute set. Counterfit will treat the target as a blackbox.")
+
         # Have the framework build the attack.
         try:
             new_attack = framework.build(
                 target=target,
-                attack=attack["attack_class"]
+                attack=attack["attack_class"] # The dotted path of the attack. 
             )
 
         except Exception as error:
@@ -166,24 +174,25 @@ class Counterfit:
 
             CFPrint.failed(
                 f"Failed to run {cfattack.attack_id} ({cfattack.name}): {error}")
-            
+
             results = None
+            return
 
         # postprocessing steps for successful attacks
         finally:
-            
-            # Set the results the attack returns
-            # this could be a model, an image, an array, etc.
-            cfattack.set_results(results)
-
-            # Determine the success of the attack
-            success = cfattack.framework.check_success(cfattack)
 
             # Stop the timer
             end_time = time.time()
 
             # Set the elapsed time metric
             cfattack.set_elapsed_time(start_time, end_time)
+
+            # Set the results the attack returns
+            # Results are attack and framework specific. 
+            cfattack.set_results(results)
+
+            # Determine the success of the attack
+            success = cfattack.framework.check_success(cfattack)
 
             # Set the success value
             cfattack.set_success(success)
@@ -194,6 +203,6 @@ class Counterfit:
             # Mark the attack as complete
             cfattack.set_status("complete")
 
-        # Let the user know the attack has completed successfully.
-        CFPrint.success(
-            f"Attack completed {cfattack.attack_id} ({cfattack.name})")
+            # Let the user know the attack has completed successfully.
+            CFPrint.success(
+                f"Attack completed {cfattack.attack_id}")
