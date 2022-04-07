@@ -6,12 +6,12 @@ from .core.frameworks import CFFramework
 from .core.logger import CFLogger
 from .core.output import CFPrint
 from .core.utils import set_id
-from .core import reporting
-
 
 from . import (
     core,
-    frameworks
+    frameworks,
+    reporting,
+    data
 )
 
 __version__ = "1.1.0"

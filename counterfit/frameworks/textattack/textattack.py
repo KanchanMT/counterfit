@@ -8,7 +8,7 @@ from textattack.datasets import Dataset
 
 from counterfit.core.attacks import CFAttack
 from counterfit.core.frameworks import CFFramework
-from counterfit.core.reporting import get_target_data_type_obj
+
 
 class TextAttackFramework(CFFramework):
     def __init__(self):
@@ -52,10 +52,11 @@ class TextAttackFramework(CFFramework):
         return [r.perturbed_text() for r in results]
 
     def post_attack_processing(self, cfattack: CFAttack):
-        current_datatype = cfattack.target.target_data_type
-        current_dt_report_gen = get_target_data_type_obj(current_datatype)
-        summary = current_dt_report_gen.get_run_summary(cfattack)
-        current_dt_report_gen.print_run_summary(summary)
+        pass
+        # current_datatype = cfattack.target.target_data_type
+        # current_dt_report_gen = get_target_data_type_obj(current_datatype)
+        # summary = current_dt_report_gen.get_run_summary(cfattack)
+        # current_dt_report_gen.print_run_summary(summary)
 
     def check_success(self, cfattack: CFAttack) -> bool:
         final_outputs, final_labels = cfattack.target.get_sample_labels(

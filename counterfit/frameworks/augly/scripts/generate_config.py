@@ -18,12 +18,22 @@ def generate_configs():
         attack_type = "blackbox"
         attack_data_tags = ["image"]
 
-        attack_params = {}   
+        params = {}   
         for k, v in inspect.signature(attack_class.__init__).parameters.items():
-            if k == 'self' or k == 'kwargs':
+            if k == 'self' or k == 'kwargs' or k == 'aug_function':
                 continue
             else:
-                attack_params[k] = v.default
+                try:
+                    if "Users" in v.default:
+                        new_param = v.default.split("\\")[-1]
+                except:
+                    new_param = v.default
+                
+                params[k] = {
+                    "docs": "Refer to attack file",
+                    "default": new_param,
+                    "optimize": {}
+                }
 
         attack = {
             "attack_name": attack_name,
@@ -32,7 +42,7 @@ def generate_configs():
             "attack_type": attack_type,
             "attack_category": attack_category,
             "attack_data_tags": attack_data_tags,
-            "attack_parameters": attack_params
+            "attack_parameters": params
         }
 
         try:

@@ -15,15 +15,14 @@ attacks_still_wip = set([
     'GeoDA', # error
     'HighConfidenceLowUncertainty', # error: requires GPR models
     'LowProFool', # error
-    # 'MIFace', # THIS ACTUALLY WORKS, but counerfit can't deal with it currently
     'MalwareGDTensorFlow', # error
     'OverTheAirFlickeringPyTorch', # error
     'RobustDPatch', # error
     'ShadowAttack', # error
-    'SquareAttack', # error
+    # 'SquareAttack', # error
     'TargetedUniversalPerturbation', # error
     'ThresholdAttack', # error
-    'ZooAttack', # error
+    # 'ZooAttack', # error
     'AdversarialPatchTensorFlowV2',
     'AdversarialPatchPyTorch',
     'AutoProjectedGradientDescent',
@@ -42,7 +41,7 @@ attacks_still_wip = set([
     "AttributeInferenceBaselineTrueLabel",
     "AttributeInferenceWhiteBoxLifestyleDecisionTree",
     "AttributeInferenceMembership",
-    "MembershipInferenceBlackBox",
+    # "MembershipInferenceBlackBox",
     "DatabaseReconstruction"
 
 ])
