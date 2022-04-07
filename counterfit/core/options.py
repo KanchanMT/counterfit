@@ -28,14 +28,10 @@ class CFOptions:
             }
         }
         
-        # Add
-        
-
         if 'targeted' in self.attack_parameters.keys():
             self.attack_parameters['target_labels'] = {"docs": "target labels for a targeted attack", "default": 0}
         for k, v in self.attack_parameters.items():
             v.update({"current": v["default"], "previous": []})          
-
 
 
     def update(self, parameters_to_update: dict) -> None:
@@ -49,7 +45,6 @@ class CFOptions:
             if k in self.attack_parameters.keys():
                 self.attack_parameters[k]["previous"].append(self.attack_parameters[k]["current"])
                 self.attack_parameters[k]["current"] = v
-
             elif k in self.cf_options.keys():
                 self.cf_options[k]["previous"].append(self.cf_options[k]["current"])
                 self.cf_options[k]["current"] = v
