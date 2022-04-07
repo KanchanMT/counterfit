@@ -12,19 +12,19 @@ class DigitKeras(CFTarget):
     data_type = "image"
     name = "digits_keras"
     task = "classification"
-    endpoint = "mnist_model.h5"
+    endpoint = "digits_keras/mnist_model.h5"
     input_shape = (28, 28, 1)
     output_classes = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     classifier = "keras"
     X = []
 
     def load(self):
-        if not os.path.isfile(self.fullpath(self.target_endpoint)):
+        if not os.path.isfile(self.fullpath(self.endpoint)):
             print("[!] Model file not found!")
             self.create_model()
         else:
             self.model = K.models.load_model(
-                self.fullpath(self.target_endpoint))
+                self.fullpath(self.endpoint))
         (train_x, train_y), (test_x, test_y) = K.datasets.mnist.load_data()
 
         self.X = test_x.astype(np.float32) / 255.  # float type [0,1]
@@ -33,7 +33,7 @@ class DigitKeras(CFTarget):
     def create_model(self):
         # 0. get started
         print(
-            f"    - Training new modeil. Begin MNIST using Keras {K.__version__}")
+            f"    - Training new model. Begin MNIST using Keras {K.__version__}")
         np.random.seed(1)
         tf.random.set_seed(1)
 

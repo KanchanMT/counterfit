@@ -7,9 +7,8 @@ from counterfit.core.targets import CFTarget
 class Digits(CFTarget):
     data_type = "image"
     name = "digits_blackbox"
-    task = "classification"
-    classifier = "blackbox"
-    endpoint = "mnist_sklearn_pipeline.pkl"
+    log_probs = True
+    endpoint = "digits_blackbox/mnist_sklearn_pipeline.pkl"
     input_shape = (1, 28, 28)
     output_classes = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     X = []
@@ -19,7 +18,7 @@ class Digits(CFTarget):
             self.model = pickle.load(f)
 
         sample_data = np.load(self.fullpath(
-            "mnist_784.npz"), allow_pickle=True)
+            "digits_blackbox/mnist_784.npz"), allow_pickle=True)
 
         self.X = sample_data["X"]  # float in [0,255]
 

@@ -12,7 +12,7 @@ class DigitKeras(CFTarget):
     data_type = "image"
     name = "digits_keras"
     task = "classification"
-    endpoint = "mnist_model.h5"
+    endpoint = "digits_keras/mnist_model.h5"
     input_shape = (28, 28, 1)
     output_classes = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     classifier = "keras"
