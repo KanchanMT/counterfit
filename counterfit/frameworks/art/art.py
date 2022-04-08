@@ -12,11 +12,11 @@ from counterfit.core.attacks import CFAttack
 from counterfit.core.output import CFPrint
 from counterfit.core.frameworks import CFFramework
 from counterfit.core.targets import CFTarget
-from counterfit.core.reporting import get_target_data_type_obj
 
 from .utils import attack_factory
 from art.utils import compute_success_array, random_targets
-
+from scipy.stats import entropy
+from art.utils import clip_and_round
 
 class ArtFramework(CFFramework):
     def __init__(self):
@@ -67,19 +67,76 @@ class ArtFramework(CFFramework):
         Initialize parameters.
         Set samples.
         """
-        # Return the correct estimator for the target selected.
-        # Keep an empty classifier around for extraction attacks.
-        classifier = cls.classifier(target)
 
+        # Pass to helper factory function for attack creation.
         loaded_attack = attack_factory(attack)
+        
+        # Return the correct ART estimator for the target selected.
+        # Keep an empty classifier around for extraction attacks.
+        classifier = cls.set_classifier(target)
 
-        # Build the classifier
+        # Build the blackbox classifier
         if "BlackBox" in classifier.__name__:
             target_classifier = classifier(
                 target.predict_wrapper,
                 target.input_shape,
                 len(target.output_classes)
             )
+
+        # Build the classifier if log_probs is present
+        elif "QueryEfficientGradient" in classifier.__name__:
+            class QEBBWrapper:
+                def __init__(self) -> None:
+                    class ModelWrapper:
+                        predict = target.predict_wrapper
+                    
+                    self.model = ModelWrapper()
+                    self.clip_values = loaded_attack.estimator.clip_values
+                    self.nb_classes = loaded_attack.estimator.nb_classes
+                    self.predict = target.predict_wrapper
+            
+            def class_gradient(x, label, target=target, num_basis=1, sigma=1.5, clip_values=(0., 255.), round_samples=0.0):
+                epsilon_map = sigma * np.random.normal(size=([num_basis] + list(target.input_shape)))
+                grads = []
+
+                y = target.predict_wrapper(x[0])
+                
+                for i in range(len(x)):
+                    minus = clip_and_round(
+                        np.repeat(x[i], num_basis, axis=0) - epsilon_map,
+                        clip_values,
+                        round_samples,
+                    )
+                    plus = clip_and_round(
+                        np.repeat(x[i], num_basis, axis=0) + epsilon_map,
+                        clip_values,
+                        round_samples,
+                    )
+                    
+                    new_y_minus = np.array([entropy(y[i], p) for p in target.predict_wrapper(minus)])
+                    new_y_plus = np.array([entropy(y[i], p) for p in target.predict_wrapper(plus)])
+                    query_efficient_grad = 2 * np.mean(
+                        np.multiply(
+                            epsilon_map.reshape(num_basis, -1),
+                            (new_y_plus - new_y_minus).reshape(num_basis, -1) / (2 * sigma),
+                        ).reshape([-1] + list(target.input_shape)),
+                        axis=0,
+                    )
+                    grads.append(query_efficient_grad)
+#                 grads_array = self._apply_preprocessing_gradient(x, np.array(grads))
+
+                return np.array(grads)                     
+
+            temp_classifier = QEBBWrapper()
+            setattr(temp_classifier, "class_gradient", class_gradient)
+
+            target_classifier = classifier(
+                classifier=temp_classifier,
+                num_basis = 3,
+                sigma = 1.5
+            )
+
+            setattr(target_classifier, "class_gradient", class_gradient)
 
         # Everything else takes a model file.
         else:
@@ -102,36 +159,23 @@ class ArtFramework(CFFramework):
 
         # Run the attack. Each attack type has it's own execution function signature.
         if "infer" in attack_attributes:
-            results = cfattack.attack.infer(
-                np.array(cfattack.samples, dtype=np.float32), y=np.array(cfattack.target.output_classes, dtype=np.float32))
+            x_init_average  = np.zeros((10, 1, 784)) + np.mean(cfattack.target.X, axis=0)
+            results = cfattack.attack.infer(x_init_average, np.array(cfattack.target.output_classes).astype(np.int64))
+            #results = cfattack.attack.infer(cfattack.samples, np.array(cfattack.target.output_classes).astype(np.int64))
 
         elif "reconstruct" in attack_attributes:
             results = cfattack.attack.reconstruct(
                 np.array(cfattack.samples, dtype=np.float32))
 
         elif "generate" in attack_attributes:
-            if "CarliniWagnerASR" == cfattack.name:
-                y = cfattack.target.output_classes
-            elif "FeatureAdversariesNumpy" in attack_attributes:
-                y = cfattack.samples
-            elif "FeatureAdversariesPyTorch" in attack_attributes:
-                y = cfattack.samples
-            elif "FeatureAdversariesTensorFlowV2" in attack_attributes:
-                y = cfattack.samples
-            else:
-                y = None
+
 
             if "ZooAttack" == cfattack.name:
                 # patch ZooAttack
                 cfattack.attack.estimator.channels_first = True
 
-            print("----------------------------------------------------------------------")
-            print(random_targets(np.array(cfattack.initial_labels), len(cfattack.target.output_classes)))
-            print("----------------------------------------------------------------------")
-
             results = cfattack.attack.generate(
-                x=np.array(cfattack.samples, dtype=np.float32),
-                y=random_targets(np.array(cfattack.initial_labels), len(cfattack.target.output_classes)))
+                x=np.array(cfattack.samples, dtype=np.float32))
 
         elif "poison" in attack_attributes:
             results = cfattack.attack.poison(
@@ -164,42 +208,57 @@ class ArtFramework(CFFramework):
     def post_attack_processing(cfattack: CFAttack):
         attack_attributes = cfattack.attack.__dir__()
 
-        if "generate" in attack_attributes:
-            current_datatype = cfattack.target.data_type
-            current_dt_report_gen = get_target_data_type_obj(current_datatype)
-            cfattack.summary = current_dt_report_gen.get_run_summary(cfattack)
-            # current_dt_report_gen.print_run_summary(summary)
+        pass
+
+        # if "generate" in attack_attributes:
+        #     current_datatype = cfattack.target.data_type
+        #     current_dt_report_gen = get_target_data_type_obj(current_datatype)
+        #     cfattack.summary = current_dt_report_gen.get_run_summary(cfattack)
+        #     # current_dt_report_gen.print_run_summary(summary)
             
-        elif "extract" in attack_attributes:
-            # Override default reporting for the attack type
-            extract_table = Table(header_style="bold magenta")
-            # Add columns to extraction table
-            extract_table.add_column("Success")
-            extract_table.add_column("Copy Cat Accuracy")
-            extract_table.add_column("Elapsed time")
-            extract_table.add_column("Total Queries")
+        # elif "extract" in attack_attributes:
+        #     # Override default reporting for the attack type
+        #     extract_table = Table(header_style="bold magenta")
+        #     # Add columns to extraction table
+        #     extract_table.add_column("Success")
+        #     extract_table.add_column("Copy Cat Accuracy")
+        #     extract_table.add_column("Elapsed time")
+        #     extract_table.add_column("Total Queries")
 
-            # Add data to extraction table
-            success = cfattack.success[0]  # Starting value
-            thieved_accuracy = cfattack.results
-            elapsed_time = cfattack.elapsed_time
-            num_queries = cfattack.logger.num_queries
-            extract_table.add_row(str(success), str(
-                thieved_accuracy), str(elapsed_time), str(num_queries))
+        #     # Add data to extraction table
+        #     success = cfattack.success[0]  # Starting value
+        #     thieved_accuracy = cfattack.results
+        #     elapsed_time = cfattack.elapsed_time
+        #     num_queries = cfattack.logger.num_queries
+        #     extract_table.add_row(str(success), str(
+        #         thieved_accuracy), str(elapsed_time), str(num_queries))
 
-            CFPrint.output(extract_table)
+        #     CFPrint.output(extract_table)
 
     @classmethod
-    def classifier(cls, target: CFTarget):
-        # this code attempts to match the .target_classifier attribute of a target with an ART
+    def set_classifier(cls, target: CFTarget):
+
+        # Match the target.classifier attribute with an ART classifier type
         classifiers = cls.get_classifiers()
 
-        if not hasattr(target, "target_classifier"):
-            return classifiers.get("BlackBoxClassifierNeuralNetwork")
+        # If no classifer attribute has been set, assume a blackbox.
+        if not hasattr(target, "classifier"):
+
+            # If the target model returns log_probs, return the relevant estimator
+            if hasattr(target, "log_probs"):
+                if target.log_probs == True:
+                    return classifiers.get("QueryEfficientGradientEstimationClassifier")
+            
+            # Else return a plain BB estimator 
+            else:
+                return classifiers.get("BlackBoxClassifierNeuralNetwork")
+
+        
+        # Else resolve the correct classifier
         else:
             for classifier in classifiers.keys():
-                if target.target_classifier.lower() in classifier.lower():
-                    return classifiers.get(classifier)
+                if target.classifier.lower() in classifier.lower():
+                    return classifiers.get(classifier, None)
 
     def check_success(self, cfattack: CFAttack) -> bool:
         attack_attributes = set(cfattack.attack.__dir__())
